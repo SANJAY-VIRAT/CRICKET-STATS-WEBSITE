@@ -1,0 +1,156 @@
+/* Orbitron Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Banger:wght@500&display=swap');
+
+/* Apply box-sizing to all elements */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    background: #f5a623;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Main container */
+.container {
+    background: #ffffff;
+    padding: 40px 35px;
+    border-radius: 18px;
+    width: 440px;
+    text-align: center;
+    border: 3px solid #f5a623;
+    box-shadow: 0 6px 20px rgba(245, 166, 35, 0.3);
+}
+
+/* Heading */
+h1 {
+    margin-bottom: 25px;
+    font-size: 28px;
+    color: #f5a623;
+    font-weight: bold;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+p {
+    color: #f5a623;
+    text-align: center;
+    margin-top: 20px; /* <-- Added spacing */
+    font-weight: bold;
+}
+
+.section-label {
+    margin-top: 20px;
+    color: #f5a623;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Dropdown container */
+.dropdown-wrapper {
+    border: 2px solid #f5a623;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 18px;
+    background: #fffbe7;
+    box-shadow: 0 0 6px #f5a62350;
+}
+
+/* Select box styling */
+/* Select box styling */
+select {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='30,50 70,90 110,50' fill='none' stroke='%23f5a623' stroke-width='15' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+select:focus {
+    outline: none;
+    border-color: #f5a623;
+}
+
+/* Input group container (for batsman and bowler inputs) */
+#batsmanFields,
+#bowlerFields {
+    border: 2px solid #f5a623;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 20px;
+    background: #fffef6;
+    box-shadow: 0 0 6px #f5a62340;
+}
+
+/* Input styling */
+input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 10px;
+    font-size: 15px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+    border-color: #f5a623;
+    box-shadow: 0 0 8px #f5a62355;
+    outline: none;
+}
+
+/* Button */
+button {
+    margin-top: 24px;
+    width: 100%;
+    background: #f5a623;
+    color: #fff;
+    font-size: 16px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+    background: #e69500;
+    box-shadow: 0 0 12px #f5a62388;
+}
+
+/* Result box */
+.result {
+    margin-top: 20px;
+    background: #fff9e5;
+    padding: 18px;
+    border-radius: 12px;
+    border: 2px solid #f5d479;
+    font-size: 16px;
+    color: #222;
+    box-shadow: 0 0 5px #f5d47955;
+}
+
+/* Error message */
+.error {
+    color: #c0392b;
+    font-weight: bold;
+    font-size: 15px;
+}
+

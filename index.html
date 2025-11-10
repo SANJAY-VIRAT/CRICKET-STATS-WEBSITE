@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cricket Stats Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Cricket Stats Calculator</h1>
+
+        <!-- Player Type Dropdown -->
+        <div class="dropdown-wrapper">
+            <select id="role" onchange="showFields()">
+                <option value="">Select Player Type</option>
+                <option value="BATSMEN">Batsman</option>
+                <option value="BOWLER">Bowler</option>
+            </select>
+        </div>
+
+        <!-- Stat Type Dropdown -->
+        <div class="dropdown-wrapper" id="statTypeWrapper" style="display: none;">
+            <select id="statType" onchange="adjustInputs()">
+                <option value="">Select Stat Type</option>
+                <option value="average">Average</option>
+                <option value="strikeRate">Strike Rate</option>
+                <option value="economyRate">Economy Rate</option>
+                <option value="all">All (Avg + SR + Eco)</option>
+            </select>
+        </div>
+
+        <!-- Batsman Input Fields -->
+        <div id="batsmanFields" style="display: none;">
+            <div id="bat_avg_fields" style="display: none;">
+                <p class="section-label">For Average:</p>
+                <input type="number" id="innings" placeholder="Number of innings">
+                <input type="text" id="runsList" placeholder="Runs per innings (space-separated)">
+                <input type="number" id="notOuts" placeholder="Number of not outs">
+            </div>
+            <div id="bat_sr_fields" style="display: none;">
+                <p class="section-label">For Strike Rate:</p>
+                <input type="number" id="totalRuns" placeholder="Total runs scored">
+                <input type="number" id="ballsFaced" placeholder="Total balls faced">
+            </div>
+        </div>
+
+        <!-- Bowler Input Fields -->
+        <div id="bowlerFields" style="display: none;">
+            <div id="bowl_fields" style="display: none;">
+                <input type="number" id="balls" placeholder="Balls bowled">
+                <input type="number" id="runsConceded" placeholder="Runs conceded">
+                <input type="number" id="wickets" placeholder="Wickets taken">
+            </div>
+        </div>
+
+        <!-- Calculate Button -->
+        <button onclick="calculate()">Calculate</button>
+
+        <!-- Output -->
+        <div class="result" id="output"></div>
+    </div>
+
+    <!-- Script Section -->
+    <script>
+        function formatValue(value) {
+            return isNaN(value) ? value : parseFloat(value).toFixed(2);
+        }
+
+        function showFields() {
+            const role = document.getElementById("role").value;
+            const statTypeWrapper = document.getElementById("statTypeWrapper");
+            document.getElementById("batsmanFields").style.display = "none";
+            document.getElementById("bowlerFields").style.display = "none";
+            statTypeWrapper.style.display = role ? "block" : "none";
+            document.getElementById("output").innerHTML = "";
+            adjustInputs();
+        }
+
+        function adjustInputs() {
+            const role = document.getElementById("role").value;
+            const statType = document.getElementById("statType").value;
+
+            document.getElementById("batsmanFields").style.display = "none";
+            document.getElementById("bowlerFields").style.display = "none";
+            document.getElementById("bat_avg_fields").style.display = "none";
+            document.getElementById("bat_sr_fields").style.display = "none";
+            document.getElementById("bowl_fields").style.display = "none";
+
+            if (role === "BATSMEN") {
+                document.getElementById("batsmanFields").style.display = "block";
+                if (statType === "average") {
+                    document.getElementById("bat_avg_fields").style.display = "block";
+                } else if (statType === "strikeRate") {
+                    document.getElementById("bat_sr_fields").style.display = "block";
+                } else if (statType === "both") {
+                    document.getElementById("bat_avg_fields").style.display = "block";
+                    document.getElementById("bat_sr_fields").style.display = "block";
+                }
+            } else if (role === "BOWLER" && statType !== "") {
+                document.getElementById("bowlerFields").style.display = "block";
+                document.getElementById("bowl_fields").style.display = "block";
+            }
+        }
+
+        async function calculate() {
+            const role = document.getElementById("role").value;
+            const statType = document.getElementById("statType").value;
+            const data = { role, statType };
+
+            if (role === "BATSMEN") {
+                if (["average", "both"].includes(statType)) {
+                    data.innings = document.getElementById("innings").value;
+                    data.runsList = document.getElementById("runsList").value;
+                    data.notOuts = document.getElementById("notOuts").value;
+                }
+                if (["strikeRate", "both"].includes(statType)) {
+                    data.totalRuns = document.getElementById("totalRuns").value;
+                    data.ballsFaced = document.getElementById("ballsFaced").value;
+                }
+            } else if (role === "BOWLER") {
+                data.balls = document.getElementById("balls").value;
+                data.runsConceded = document.getElementById("runsConceded").value;
+                data.wickets = document.getElementById("wickets").value;
+            }
+
+            const response = await fetch("/calculate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            const outputDiv = document.getElementById("output");
+
+            if (result.error) {
+                outputDiv.innerHTML = `<div class="error">${result.error}</div>`;
+            } else {
+                outputDiv.innerHTML = `
+                    ${result.average !== undefined ? `<strong>Average:</strong> ${formatValue(result.average)}<br>` : ''}
+                    ${result.strikeRate !== undefined ? `<strong>Strike Rate:</strong> ${formatValue(result.strikeRate)}<br>` : ''}
+                    ${result.economyRate !== undefined ? `<strong>Economy Rate:</strong> ${formatValue(result.economyRate)}` : ''}
+                `;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputs = Array.from(document.querySelectorAll("input, select"));
+            inputs.forEach((input, index) => {
+                input.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        const next = inputs[index + 1];
+                        if (next) next.focus();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
